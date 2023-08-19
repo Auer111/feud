@@ -22,7 +22,15 @@ const createRevealedCharacters = (str) => {
   return revealed;
 };
 
-const TileModal = ({ id, points, question, answer, audio, closeModal }) => {
+const speakText = (text) => {
+  if (!window.speechSynthesis.speaking) {
+    window.speechSynthesis.speak(
+      new SpeechSynthesisUtterance(text.replace(/_+/g, "blank"))
+    );
+  }
+};
+
+const TileModal = ({ id, points, question, answer, closeModal }) => {
   const [revealedCharacters, setRevealedCharacters] = useState(
     createRevealedCharacters(answer)
   );
@@ -30,12 +38,12 @@ const TileModal = ({ id, points, question, answer, audio, closeModal }) => {
 
   useEffect(() => {
     revealedCharactersRef.current = revealedCharacters;
-    console.log(answer);
   }, [revealedCharacters]);
 
   useEffect(() => {
-    AudioClips[audio]?.play();
-  }, [audio]);
+    console.log(answer);
+    speakText(question);
+  }, []);
 
   // Function to reveal characters of the answer
   const revealCharacters = () => {

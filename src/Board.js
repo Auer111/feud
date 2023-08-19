@@ -1,54 +1,32 @@
 import React, { useEffect, useState } from "react";
 import Tile from "./Tile";
 import TileModal from "./TileModal";
-import { questionsAndAnswersWithIds, CategoryEnum, Teams } from "./data"; // Import the questionsAndAnswersWithIds and CategoryEnum
+import { Teams } from "./data"; // Import the questionsAndAnswersWithIds and CategoryEnum
 import { AudioClips } from "./audio/audio";
 import DailyDouble from "./DailyDouble";
 
-const Board = ({ onGameEnd }) => {
-  // For demonstration purposes, let's define some sample categories and points.
-  const categories = Object.values(CategoryEnum); // Get an array of all categories from the CategoryEnum object
-
-  const [questionsAndAnswers, setQuestionsAndAnswers] = useState(
-    questionsAndAnswersWithIds
-  );
+const Board = ({ categories, onGameEnd }) => {
+  const [questionsAndAnswers, setQuestionsAndAnswers] = useState(categories);
   const [activeTileId, setActiveTileId] = useState(null);
   const [selectedQA, setSelectedQA] = useState(null);
   const [scoreAlpha, setScoreAlpha] = useState(0);
   const [scoreOmega, setScoreOmega] = useState(0);
-  const [fillId, setFillId] = useState(1);
+  const [fillId, setFillId] = useState(0);
 
-  const handleCategoryClick = () => {
-    //initilize board
-  };
+  const handleCategoryClick = () => {};
 
   useEffect(() => {
     AudioClips.Fill.play();
 
-    setQuestionsAndAnswers(
-      questionsAndAnswers.map((qa) => ({ ...qa, used: true }))
-    );
-    setFillId(1);
-    setTimeout(() => setFillId(activateTile()), 1000);
+    setTimeout(() => setFillId(fillId + 1), 1000);
   }, []);
 
   useEffect(() => {
     //initilize board
-    if (fillId > 1) {
-      setTimeout(() => setFillId(activateTile()), 90);
+    if (fillId > 0) {
+      setTimeout(() => setFillId(fillId + 1), 90);
     }
   }, [fillId]);
-
-  const activateTile = () => {
-    if (fillId <= questionsAndAnswers.length) {
-      setQuestionsAndAnswers(
-        questionsAndAnswers.map((qa) =>
-          qa.id === fillId ? { ...qa, used: false } : qa
-        )
-      );
-    }
-    return fillId + 1;
-  };
 
   const handleTileClick = (qa) => {
     if (activeTileId === qa.id) {
@@ -62,9 +40,12 @@ const Board = ({ onGameEnd }) => {
 
   const closeModal = (team, points) => {
     if (selectedQA) {
-      const updatedQuestionsAndAnswers = questionsAndAnswers.map((qa) =>
-        qa.id === selectedQA.id ? { ...qa, used: true } : qa
-      );
+      const updatedCategories = questionsAndAnswers.map((category) => ({
+        ...category,
+        questions: category.questions.map((qa) =>
+          qa.id === selectedQA.id ? { ...qa, used: true } : qa
+        ),
+      }));
 
       if (team === Teams.Alpha) {
         setScoreAlpha((prevScore) => prevScore + points);
@@ -72,7 +53,7 @@ const Board = ({ onGameEnd }) => {
         setScoreOmega((prevScore) => prevScore + points);
       }
 
-      setQuestionsAndAnswers(updatedQuestionsAndAnswers);
+      setQuestionsAndAnswers(updatedCategories);
       setActiveTileId(null);
       setSelectedQA(null);
     }
@@ -80,8 +61,9 @@ const Board = ({ onGameEnd }) => {
 
   useEffect(() => {
     if (
-      (scoreAlpha > 0 || scoreOmega > 0) &&
-      questionsAndAnswers.every((qa) => qa.used)
+      questionsAndAnswers.every((category) =>
+        category.questions.every((qa) => qa.used)
+      )
     ) {
       const winningTeam = scoreAlpha > scoreOmega ? Teams.Alpha : Teams.Omega;
       onGameEnd(winningTeam); // Call the onGameEnd function with the winning team
@@ -104,7 +86,6 @@ const Board = ({ onGameEnd }) => {
               scoreOmega={scoreOmega}
               question={selectedQA.question}
               answer={selectedQA.answer}
-              audio={selectedQA.audio}
               closeModal={closeModal}
             />
           ) : (
@@ -112,32 +93,29 @@ const Board = ({ onGameEnd }) => {
               points={selectedQA.points}
               question={selectedQA.question}
               answer={selectedQA.answer}
-              audio={selectedQA.audio}
               closeModal={closeModal}
             />
           ))}
         {!activeTileId && (
           <div className="board-content">
-            {categories.map((category) => (
-              <div key={category} className="row">
+            {questionsAndAnswers.map((c, i) => (
+              <div key={i} className="row">
                 <div className="tiles-row">
                   <button
                     className={`tileStyle one5th header`}
                     onClick={() => handleCategoryClick()}
                   >
-                    {category}
+                    {c.name}
                   </button>
-                  {questionsAndAnswers
-                    .filter((qa) => qa.category === category)
-                    .map((qa) => (
-                      <Tile
-                        key={qa.id}
-                        points={qa.points}
-                        used={qa.used}
-                        id={qa.id}
-                        handleTileClick={() => handleTileClick(qa)}
-                      />
-                    ))}
+                  {c.questions.map((qa, qai) => (
+                    <Tile
+                      key={qai}
+                      points={qa.points}
+                      used={qa.used || i * 5 + qai > fillId}
+                      id={qa.id}
+                      handleTileClick={() => handleTileClick(qa)}
+                    />
+                  ))}
                 </div>
               </div>
             ))}

@@ -46,6 +46,33 @@ body {
   height: 100vh;
 }
 
+.category-select{
+  width: 100%;
+  bottom: 0;
+  position: absolute;
+  margin-bottom: 1em;
+  text-align: center;
+  color: cornflowerblue;
+}
+.category-select > .items{
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap-reverse;
+}
+.category-select button{
+  margin: .5em;
+  background: transparent;
+  border: none;
+  color: cornflowerblue;
+  
+}
+.category-select button:hover{
+  text-shadow: #fc0 1px 0 10px;
+}
+.category-select button.selected{
+  background: #2446ac;
+}
+
 .tileStyle {
   background-color: #010a78;
   border: 3px solid black;
