@@ -1,3 +1,13 @@
+
+
+*{
+  user-select: none;
+}
+
+body{
+  overflow-y: hidden;
+}
+
 .center {
   display: grid;
   place-content: center;
@@ -27,19 +37,25 @@ body {
   margin: 0;
 }
 
+.splash-screen {
+  background-image: url("./img/jeopardy.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  width: 100vw;
+  height: 100vh;
+}
+
 .tileStyle {
   background-color: #010a78;
-  border: 5px solid black;
-  color: #d7a04b;
+  border: 3px solid black;
+  box-shadow: inset 0px 0px 20px 2px black;
+  color: #ffbf5e;
   font-family: fantasy;
   font-size: 8vh;
   cursor: pointer;
   align-items: center;
   justify-content: center;
-}
-
-.tileStyle:hover {
-  background-color: #0616e2;
 }
 
 .header {
@@ -56,13 +72,135 @@ body {
   right: 0;
   bottom: 0;
   background-color: black;
+  width: 120vh;
 }
 
 .modal-body{
   color: white;
   height: 100vh;
-  width: 100vh;
+  width: 120vh;
   display: grid;
   place-content: center;
-  background-color: #010a78;
+  background-color: #0616e2;
+}
+.dd{
+  background: url("./img/dd.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: black;
+}
+
+.screen{
+  display: flex;
+}
+
+.logo{
+  color: #ffffff;
+    text-shadow: 0 0 8px #010a78;
+    font-weight: bold;
+    font-size: 2em;
+    position: absolute;
+    transform: translate(69px, 10px);
+}
+
+.winner-screen{
+  height: 100vh;
+}
+
+.winner-screen .logo{
+  align-self: center;
+  position: inherit;
+  transform: none;
+}
+
+.tile-modal .character:not(:hover){
+  filter: grayscale(1);
+}
+
+.character > p {
+  border: 1px solid black;
+  background-color: blue;
+  color: white;
+  width: 5em;
+  box-shadow: inset 0px 1px 20px 2px black;
+  font-family: monospace;
+  transform: translate(0, -1.7em);
+}
+
+
+
+.character{
+  background-image: url("./img/character2.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  z-index: 100;
+  display: flex;
+  align-items: self-end;
+  justify-content: center;
+
+  height: 100vh;
+  width: 28vh;
+  font-size: 3em;
+  background-color: transparent;
+  color: #010a78;
+  border: none;
+  text-align: center;
+  margin: 0;
+  display: grid;
+  place-content: bottom;
+}
+
+.winner-screen .character{
+  width: 100vh;
+}
+
+.character:first-child{
+  background-image: url("./img/character1.png");
+}
+
+.modal-click > button > p{
+  font-size: 2rem;
+  margin: 0;
+  margin-left: -.5em;
+}
+.modal-click > button:hover{
+  color: greenyellow;
+  cursor: pointer;
+}
+
+.question{
+  font-size: 2em;
+  padding-left: 2em;
+  padding-right: 2em;
+  text-align: center;
+}
+
+.answer{
+  font-size: 2em;
+    letter-spacing: .1em;
+    word-spacing: 1em;
+    text-align: center;
+}
+
+iframe{
+  border: none;
+  margin-right: -13em;
+}
+.guessing-phase{
+  display: flex;
+}
+.guessing-phase > button {
+  width: 5em;
+  height: 7em;
+  margin: 0;
+  background: transparent;
+  border: transparent;
+}
+
+.guessing-phase > button:hover{
+  background-color: red;
+}
+.guessing-phase > button:first-child:hover{
+  background-color: green;
 }

@@ -1,14 +1,19 @@
 import React from "react";
 
-const Tile = ({ point, question, handleTileClick }) => {
+const Tile = ({ points, used, handleTileClick }) => {
   const handleClick = () => {
     handleTileClick();
   };
 
   return (
-    <button className={`tile one5th tileStyle`} onClick={handleClick}>
-      <div className="tile-content">{point}</div>
-    </button>
+    <>
+      {used && <button className={`tileStyle one5th header`}></button>}
+      {!used && (
+        <button className={`tile one5th tileStyle`} onClick={handleClick}>
+          <div className="tile-content">{points}</div>
+        </button>
+      )}
+    </>
   );
 };
 
